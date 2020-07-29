@@ -1,7 +1,7 @@
-"use strict"
+"use strict";
 
 const TASK_COUNT = 3;
-const siteMainElement = document.querySelector(`.main`)
+const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 const createSiteMenuTemplate = () => {
@@ -361,25 +361,25 @@ const createLoadMoreButtonTemplate = () => {
   return (`<button class="load-more" type="button">load more</button>`);
 };
 
-const render = (container, template, place = "beforeEnd") => {
+const render = (container, template, place = `beforEend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render (siteHeaderElement, createSiteMenuTemplate());
-render (siteMainElement, createFilterTemplate());
-render (siteMainElement, createBoardTemplate());
+render(siteHeaderElement, createSiteMenuTemplate());
+render(siteMainElement, createFilterTemplate());
+render(siteMainElement, createBoardTemplate());
 
 const siteBoardElement = siteMainElement.querySelector(`.board`);
 
-render (siteBoardElement, createSortTemplate());
-render (siteBoardElement, createBoardTasksTemplate());
+render(siteBoardElement, createSortTemplate());
+render(siteBoardElement, createBoardTasksTemplate());
 
 const siteBoardTaskElement = siteBoardElement.querySelector(`.board__tasks`);
 
-render (siteBoardTaskElement, createTaskEditTemplate());
+render(siteBoardTaskElement, createTaskEditTemplate());
 
 for (let i = 0; i < TASK_COUNT; i++) {
-  render (siteBoardTaskElement, createTaskTemplate());
+  render(siteBoardTaskElement, createTaskTemplate());
 }
 
-render (siteBoardElement, createLoadMoreButtonTemplate());
+render(siteBoardElement, createLoadMoreButtonTemplate());
