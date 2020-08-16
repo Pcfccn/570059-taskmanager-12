@@ -7,9 +7,8 @@ import {createTaskEditTemplate} from './view/task-edit.js';
 import {createLoadMoreButtonTemplate} from './view/load-more-button.js';
 import {generateTasks} from './mock/task.js';
 import {generateFilter} from './mock/filter.js';
+import {TASK_COUNT, TASK_COUNT_PER_STEP} from './constants.js';
 
-const TASK_COUNT = 22;
-const TASK_COUNT_PER_STEP = 8;
 const tasks = generateTasks(TASK_COUNT);
 const filters = generateFilter(tasks);
 

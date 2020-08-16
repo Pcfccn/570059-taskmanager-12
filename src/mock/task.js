@@ -1,8 +1,8 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils.js';
-import {COLORS, DESCRIPTIONS} from '../consts.js';
+import {COLORS, DESCRIPTIONS, maxDaysGap} from '../constants.js';
 
 const generateDate = () => {
-  const maxDaysGap = 7;
+
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
   const currentDate = new Date();
   currentDate.setHours(23, 59, 59, 999);
@@ -10,20 +10,10 @@ const generateDate = () => {
   return new Date(currentDate);
 };
 
-const generateDueDate = () => {
-  return getRandomInteger(0, 1) ? generateDate() : null;
-};
+const generateDueDate = () => getRandomInteger(0, 1) ? generateDate() : null;
 
 const generateRepeating = (dueDate) => {
-  return dueDate === null ? {
-    mo: false,
-    tu: false,
-    we: Boolean(getRandomInteger(0, 1)),
-    th: false,
-    fr: Boolean(getRandomInteger(0, 1)),
-    sa: false,
-    su: false,
-  } : {
+  const week = {
     mo: false,
     tu: false,
     we: false,
@@ -32,6 +22,12 @@ const generateRepeating = (dueDate) => {
     sa: false,
     su: false,
   };
+
+  if (!dueDate) {
+    week.we = Boolean(getRandomInteger(0, 1));
+    week.fr = Boolean(getRandomInteger(0, 1));
+  }
+  return week;
 };
 
 const generateTask = () => {
@@ -47,9 +43,6 @@ const generateTask = () => {
   };
 };
 
-const generateTasks = (count = 1) => {
-  const tasks = new Array(count).fill().map(generateTask);
-  return tasks;
-};
+const generateTasks = (count = 1) => new Array(count).fill().map(generateTask);
 
 export {generateTasks};
