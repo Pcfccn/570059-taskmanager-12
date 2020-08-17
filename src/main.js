@@ -41,7 +41,7 @@ if (tasks.length > TASK_COUNT_PER_STEP) {
   render(siteBoardElement, createLoadMoreButtonTemplate());
 
   const loadMoreButton = siteBoardElement.querySelector(`.load-more`);
-
+//
   loadMoreButton.addEventListener(`click`, (evt) => {
     evt.preventDefault();
     tasks

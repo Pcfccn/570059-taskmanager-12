@@ -4,5 +4,5 @@ const createBoardTemplate = () => {
 const createBoardTasksTemplate = () => {
   return (`<div class="board__tasks"></div>`);
 };
-
+//
 export {createBoardTemplate, createBoardTasksTemplate};
