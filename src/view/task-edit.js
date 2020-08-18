@@ -1,4 +1,4 @@
-import {isExpired, isRepeating} from '../utils.js';
+import {isExpired, isRepeating, createElement} from '../utils.js';
 import {COLORS} from '../constants.js';
 
 const createTaskEditDateTemplate = (dueDate) => {
@@ -133,5 +133,24 @@ const createTaskEditTemplate = (task = {}) => {
     </article>`
   );
 };
-//
-export {createTaskEditTemplate};
+
+export default class TaskEditView {
+  constructor(task) {
+    this._element = null;
+    this._task = task;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

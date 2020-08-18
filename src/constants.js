@@ -5,4 +5,9 @@ const TASK_COUNT = 22;
 const TASK_COUNT_PER_STEP = 8;
 const maxDaysGap = 7;
 
-export {COLORS, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap};
+const renderPosition = {
+  AFTER_BEGIN: `afterBegin`,
+  BEFORE_END: `beforeEnd`,
+};
+
+export {COLORS, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap, renderPosition};
