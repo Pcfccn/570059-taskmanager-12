@@ -1,13 +1,15 @@
-import {createSiteMenuTemplate} from './view/site-menu.js';
-import {createFilterTemplate} from './view/filter.js';
-import {createBoardTemplate, createBoardTasksTemplate} from './view/board.js';
-import {createSortTemplate} from './view/sort.js';
-import {createTaskTemplate} from './view/task.js';
-import {createTaskEditTemplate} from './view/task-edit.js';
-import {createLoadMoreButtonTemplate} from './view/load-more-button.js';
+import SiteMenuView from './view/site-menu.js';
+import FilterView from './view/filter.js';
+import BoardView from './view/board.js';
+import SortView from './view/sort.js';
+import TaskView from './view/task.js';
+import TaskEditView from './view/task-edit.js';
+import LoadMoreButtonView from './view/load-more-button.js';
 import {generateTasks} from './mock/task.js';
 import {generateFilter} from './mock/filter.js';
 import {TASK_COUNT, TASK_COUNT_PER_STEP} from './constants.js';
+import {renderElement} from './utils.js';
+import TaskList from './view/task-list.js';
 
 const tasks = generateTasks(TASK_COUNT);
 const filters = generateFilter(tasks);
@@ -15,402 +17,61 @@ const filters = generateFilter(tasks);
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-const createSiteMenuTemplate = () => {
-  return (
-    `<section class="control__btn-wrap">
-      <input
-        type="radio"
-        name="control"
-        id="control__new-task"
-        class="control__input visually-hidden"
-      />
-      <label for="control__new-task" class="control__label control__label--new-task"
-        >+ ADD NEW TASK</label
-      >
-      <input
-        type="radio"
-        name="control"
-        id="control__task"
-        class="control__input visually-hidden"
-        checked
-      />
-      <label for="control__task" class="control__label">TASKS</label>
-      <input
-        type="radio"
-        name="control"
-        id="control__statistic"
-        class="control__input visually-hidden"
-      />
-      <label for="control__statistic" class="control__label"
-        >STATISTICS</label
-      >
-    </section>`
-  );
-};
-const createFilterTemplate = () => {
-  return (
-    `<section class="main__filter filter container">
-      <input
-        type="radio"
-        id="filter__all"
-        class="filter__input visually-hidden"
-        name="filter"
-        checked
-      />
-      <label for="filter__all" class="filter__label">
-        All <span class="filter__all-count">13</span></label
-      >
-      <input
-        type="radio"
-        id="filter__overdue"
-        class="filter__input visually-hidden"
-        name="filter"
-        disabled
-      />
-      <label for="filter__overdue" class="filter__label"
-        >Overdue <span class="filter__overdue-count">0</span></label
-      >
-      <input
-        type="radio"
-        id="filter__today"
-        class="filter__input visually-hidden"
-        name="filter"
-        disabled
-      />
-      <label for="filter__today" class="filter__label"
-        >Today <span class="filter__today-count">0</span></label
-      >
-      <input
-        type="radio"
-        id="filter__favorites"
-        class="filter__input visually-hidden"
-        name="filter"
-      />
-      <label for="filter__favorites" class="filter__label"
-        >Favorites <span class="filter__favorites-count">1</span></label
-      >
-      <input
-        type="radio"
-        id="filter__repeating"
-        class="filter__input visually-hidden"
-        name="filter"
-      />
-      <label for="filter__repeating" class="filter__label"
-        >Repeating <span class="filter__repeating-count">1</span></label
-      >
-      <input
-        type="radio"
-        id="filter__archive"
-        class="filter__input visually-hidden"
-        name="filter"
-      />
-      <label for="filter__archive" class="filter__label"
-        >Archive <span class="filter__archive-count">115</span></label
-      >
-    </section>`
-  );
-};
-const createBoardTemplate = () => {
-  return (`<section class="board container"></section>`);
-};
-const createBoardTasksTemplate = () => {
-  return (`<div class="board__tasks"></div>`);
-};
-const createSortTemplate = () => {
-  return (
-    `<div class="board__filter-list">
-    <a href="#" class="board__filter">SORT BY DEFAULT</a>
-    <a href="#" class="board__filter">SORT BY DATE up</a>
-    <a href="#" class="board__filter">SORT BY DATE down</a>
-    </div>`
-  );
-};
-const createTaskEditTemplate = () => {
-  return (
-    `<article class="card card--edit card--yellow card--repeat">
-    <form class="card__form" method="get">
-      <div class="card__inner">
-        <div class="card__color-bar">
-          <svg class="card__color-bar-wave" width="100%" height="10">
-            <use xlink:href="#wave"></use>
-          </svg>
-        </div>
+renderElement(siteHeaderElement, new SiteMenuView().getElement());
+renderElement(siteMainElement, new FilterView(filters).getElement());
 
-        <div class="card__textarea-wrap">
-          <label>
-            <textarea
-              class="card__text"
-              placeholder="Start typing your text here..."
-              name="text"
-            >This is example of task edit. You can set date and chose repeating days and color.</textarea>
-          </label>
-        </div>
+const siteBoardElement = new BoardView().getElement();
+renderElement(siteMainElement, siteBoardElement);
+renderElement(siteBoardElement, new SortView().getElement());
 
-        <div class="card__settings">
-          <div class="card__details">
-            <div class="card__dates">
-              <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">yes</span>
-              </button>
+const siteBoardTaskElement = new TaskList().getElement();
+renderElement(siteBoardElement, siteBoardTaskElement);
 
-              <fieldset class="card__date-deadline">
-                <label class="card__input-deadline-wrap">
-                  <input
-                    class="card__date"
-                    type="text"
-                    placeholder=""
-                    name="date"
-                    value="23 September 16:15"
-                  />
-                </label>
-              </fieldset>
+const renderTask = (task) => {
+  const taskComponent = new TaskView(task);
+  const taskEditComponent = new TaskEditView(task);
+  const taskComponentElement = taskComponent.getElement();
+  const taskEditComponentElement = taskEditComponent.getElement();
 
-              <button class="card__repeat-toggle" type="button">
-                repeat:<span class="card__repeat-status">yes</span>
-              </button>
+  const replaceCardToForm = () => {
+    siteBoardTaskElement.replaceChild(taskEditComponentElement, taskComponentElement);
+  };
 
-              <fieldset class="card__repeat-days">
-                <div class="card__repeat-days-inner">
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-mo-4"
-                    name="repeat"
-                    value="mo"
-                  />
-                  <label class="card__repeat-day" for="repeat-mo-4"
-                    >mo</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-tu-4"
-                    name="repeat"
-                    value="tu"
-                    checked
-                  />
-                  <label class="card__repeat-day" for="repeat-tu-4"
-                    >tu</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-we-4"
-                    name="repeat"
-                    value="we"
-                  />
-                  <label class="card__repeat-day" for="repeat-we-4"
-                    >we</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-th-4"
-                    name="repeat"
-                    value="th"
-                  />
-                  <label class="card__repeat-day" for="repeat-th-4"
-                    >th</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-fr-4"
-                    name="repeat"
-                    value="fr"
-                    checked
-                  />
-                  <label class="card__repeat-day" for="repeat-fr-4"
-                    >fr</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    name="repeat"
-                    value="sa"
-                    id="repeat-sa-4"
-                  />
-                  <label class="card__repeat-day" for="repeat-sa-4"
-                    >sa</label
-                  >
-                  <input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-su-4"
-                    name="repeat"
-                    value="su"
-                    checked
-                  />
-                  <label class="card__repeat-day" for="repeat-su-4"
-                    >su</label
-                  >
-                </div>
-              </fieldset>
-            </div>
-          </div>
+  const replaceFormToCard = () => {
+    siteBoardTaskElement.replaceChild(taskComponentElement, taskEditComponentElement);
+  };
 
-          <div class="card__colors-inner">
-            <h3 class="card__colors-title">Color</h3>
-            <div class="card__colors-wrap">
-              <input
-                type="radio"
-                id="color-black-4"
-                class="card__color-input card__color-input--black visually-hidden"
-                name="color"
-                value="black"
-              />
-              <label
-                for="color-black-4"
-                class="card__color card__color--black"
-                >black</label
-              >
-              <input
-                type="radio"
-                id="color-yellow-4"
-                class="card__color-input card__color-input--yellow visually-hidden"
-                name="color"
-                value="yellow"
-                checked
-              />
-              <label
-                for="color-yellow-4"
-                class="card__color card__color--yellow"
-                >yellow</label
-              >
-              <input
-                type="radio"
-                id="color-blue-4"
-                class="card__color-input card__color-input--blue visually-hidden"
-                name="color"
-                value="blue"
-              />
-              <label
-                for="color-blue-4"
-                class="card__color card__color--blue"
-                >blue</label
-              >
-              <input
-                type="radio"
-                id="color-green-4"
-                class="card__color-input card__color-input--green visually-hidden"
-                name="color"
-                value="green"
-              />
-              <label
-                for="color-green-4"
-                class="card__color card__color--green"
-                >green</label
-              >
-              <input
-                type="radio"
-                id="color-pink-4"
-                class="card__color-input card__color-input--pink visually-hidden"
-                name="color"
-                value="pink"
-              />
-              <label
-                for="color-pink-4"
-                class="card__color card__color--pink"
-                >pink</label
-              >
-            </div>
-          </div>
-        </div>
+  taskComponentElement.querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
+    replaceCardToForm();
+  });
 
-        <div class="card__status-btns">
-          <button class="card__save" type="submit">save</button>
-          <button class="card__delete" type="button">delete</button>
-        </div>
-      </div>
-    </form>
-    </article>`
-  );
-};
-const createTaskTemplate = () => {
-  return (
-    `<article class="card card--black">
-      <div class="card__form">
-        <div class="card__inner">
-          <div class="card__control">
-            <button type="button" class="card__btn card__btn--edit">
-              edit
-            </button>
-            <button type="button" class="card__btn card__btn--archive">
-              archive
-            </button>
-            <button
-              type="button"
-              class="card__btn card__btn--favorites card__btn--disabled"
-            >
-              favorites
-            </button>
-          </div>
+  taskEditComponentElement.querySelector(`form`).addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    replaceFormToCard();
+  });
 
-          <div class="card__color-bar">
-            <svg class="card__color-bar-wave" width="100%" height="10">
-              <use xlink:href="#wave"></use>
-            </svg>
-          </div>
-
-          <div class="card__textarea-wrap">
-            <p class="card__text">Example default task with default color.</p>
-          </div>
-
-          <div class="card__settings">
-            <div class="card__details">
-              <div class="card__dates">
-                <div class="card__date-deadline">
-                  <p class="card__input-deadline-wrap">
-                    <span class="card__date">23 September</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </article>`
-  );
-};
-const createLoadMoreButtonTemplate = () => {
-  return (`<button class="load-more" type="button">load more</button>`);
+  renderElement(siteBoardTaskElement, taskComponentElement);
 };
 
-const render = (container, template, place = `beforEend`) => {
-  container.insertAdjacentHTML(place, template);
-};
-
-render(siteHeaderElement, createSiteMenuTemplate());
-render(siteMainElement, createFilterTemplate(filters));
-render(siteMainElement, createBoardTemplate());
-
-const siteBoardElement = siteMainElement.querySelector(`.board`);
-
-render(siteBoardElement, createSortTemplate());
-render(siteBoardElement, createBoardTasksTemplate());
-
-const siteBoardTaskElement = siteBoardElement.querySelector(`.board__tasks`);
-
-render(siteBoardTaskElement, createTaskEditTemplate(tasks[0]));
-
-for (let i = 1; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i++) {
-  render(siteBoardTaskElement, createTaskTemplate(tasks[i]));
+for (let i = 0; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i++) {
+  renderTask(tasks[i]);
 }
 
 let renderedTaskCount = TASK_COUNT_PER_STEP;
 if (tasks.length > TASK_COUNT_PER_STEP) {
-  render(siteBoardElement, createLoadMoreButtonTemplate());
+  const loadMoreButton = new LoadMoreButtonView();
+  const loadMoreButtonElement = loadMoreButton.getElement();
+  renderElement(siteBoardElement, loadMoreButtonElement);
 
-  const loadMoreButton = siteBoardElement.querySelector(`.load-more`);
-//
-  loadMoreButton.addEventListener(`click`, (evt) => {
+  loadMoreButtonElement.addEventListener(`click`, (evt) => {
     evt.preventDefault();
     tasks
     .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
-    .forEach((task) => render(siteBoardTaskElement, createTaskTemplate(task)));
+    .forEach((task) => renderTask(task));
     renderedTaskCount += TASK_COUNT_PER_STEP;
     if (renderedTaskCount >= tasks.length) {
-      loadMoreButton.remove();
+      loadMoreButtonElement.remove();
+      loadMoreButton.removeElement();
     }
   });
 }
