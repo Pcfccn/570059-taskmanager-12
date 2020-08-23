@@ -10,6 +10,7 @@ import {generateFilter} from './mock/filter.js';
 import {TASK_COUNT, TASK_COUNT_PER_STEP} from './constants.js';
 import {renderElement} from './utils.js';
 import TaskList from './view/task-list.js';
+import NoTaskView from './view/no-task.js';
 
 const tasks = generateTasks(TASK_COUNT);
 const filters = generateFilter(tasks);
@@ -17,61 +18,82 @@ const filters = generateFilter(tasks);
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-renderElement(siteHeaderElement, new SiteMenuView().getElement());
-renderElement(siteMainElement, new FilterView(filters).getElement());
-
-const siteBoardElement = new BoardView().getElement();
-renderElement(siteMainElement, siteBoardElement);
-renderElement(siteBoardElement, new SortView().getElement());
-
-const siteBoardTaskElement = new TaskList().getElement();
-renderElement(siteBoardElement, siteBoardTaskElement);
-
-const renderTask = (task) => {
+const renderTask = (container, task) => {
   const taskComponent = new TaskView(task);
   const taskEditComponent = new TaskEditView(task);
   const taskComponentElement = taskComponent.getElement();
   const taskEditComponentElement = taskEditComponent.getElement();
 
   const replaceCardToForm = () => {
-    siteBoardTaskElement.replaceChild(taskEditComponentElement, taskComponentElement);
+    container.replaceChild(taskEditComponentElement, taskComponentElement);
   };
 
   const replaceFormToCard = () => {
-    siteBoardTaskElement.replaceChild(taskComponentElement, taskEditComponentElement);
+    container.replaceChild(taskComponentElement, taskEditComponentElement);
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      replaceFormToCard();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
   };
 
   taskComponentElement.querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
     replaceCardToForm();
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   taskEditComponentElement.querySelector(`form`).addEventListener(`submit`, (evt) => {
     evt.preventDefault();
     replaceFormToCard();
+    document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  renderElement(siteBoardTaskElement, taskComponentElement);
+  renderElement(container, taskComponentElement);
 };
 
-for (let i = 0; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i++) {
-  renderTask(tasks[i]);
-}
 
-let renderedTaskCount = TASK_COUNT_PER_STEP;
-if (tasks.length > TASK_COUNT_PER_STEP) {
-  const loadMoreButton = new LoadMoreButtonView();
-  const loadMoreButtonElement = loadMoreButton.getElement();
-  renderElement(siteBoardElement, loadMoreButtonElement);
+const renderBoard = () => {
+  renderElement(siteHeaderElement, new SiteMenuView().getElement());
+  renderElement(siteMainElement, new FilterView(filters).getElement());
 
-  loadMoreButtonElement.addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    tasks
-    .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
-    .forEach((task) => renderTask(task));
-    renderedTaskCount += TASK_COUNT_PER_STEP;
-    if (renderedTaskCount >= tasks.length) {
-      loadMoreButtonElement.remove();
-      loadMoreButton.removeElement();
+  const siteBoardElement = new BoardView().getElement();
+  renderElement(siteMainElement, siteBoardElement);
+  if (tasks.every((task) => task.isArchive)) {
+    renderElement(siteBoardElement, new NoTaskView().getElement());
+  } else {
+
+    renderElement(siteMainElement, siteBoardElement);
+    renderElement(siteBoardElement, new SortView().getElement());
+
+    const siteBoardTaskElement = new TaskList().getElement();
+    renderElement(siteBoardElement, siteBoardTaskElement);
+
+    for (let i = 0; i < Math.min(tasks.length, TASK_COUNT_PER_STEP); i++) {
+      renderTask(siteBoardTaskElement, tasks[i]);
     }
-  });
-}
+
+    let renderedTaskCount = TASK_COUNT_PER_STEP;
+    if (tasks.length > TASK_COUNT_PER_STEP) {
+      const loadMoreButton = new LoadMoreButtonView();
+      const loadMoreButtonElement = loadMoreButton.getElement();
+      renderElement(siteBoardElement, loadMoreButtonElement);
+
+      loadMoreButtonElement.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        tasks
+        .slice(renderedTaskCount, renderedTaskCount + TASK_COUNT_PER_STEP)
+        .forEach((task) => renderTask(siteBoardTaskElement, task));
+        renderedTaskCount += TASK_COUNT_PER_STEP;
+        if (renderedTaskCount >= tasks.length) {
+          loadMoreButtonElement.remove();
+          loadMoreButton.removeElement();
+        }
+      });
+    }
+  }
+};
+
+renderBoard();
