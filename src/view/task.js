@@ -1,4 +1,4 @@
-import {formateDate, isExpired, isRepeating} from '../utils.js';
+import {formateDate, isTaskExpired, isTaskRepeating} from '../utils/task.js';
 import Abstract from './abstract.js';
 
 const createTaskTemplate = (task) => {
@@ -6,11 +6,11 @@ const createTaskTemplate = (task) => {
 
   const date = formateDate(dueDate);
 
-  const deadlineClassName = isExpired(dueDate)
+  const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
     : ``;
 
-  const repeatClassName = isRepeating(repeating)
+  const repeatClassName = isTaskRepeating(repeating)
     ? `card--repeat`
     : ``;
 

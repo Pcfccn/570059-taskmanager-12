@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomArrayElement} from '../utils.js';
+import {getRandomInteger, getRandomArrayElement} from '../utils/common.js';
 import {COLORS, DESCRIPTIONS, maxDaysGap} from '../constants.js';
 
 const generateDate = () => {
