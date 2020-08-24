@@ -1,4 +1,5 @@
-import {formateDate, isExpired, isRepeating, createElement} from '../utils.js';
+import {formateDate, isExpired, isRepeating} from '../utils.js';
+import Abstract from './abstract.js';
 
 const createTaskTemplate = (task) => {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
@@ -69,23 +70,12 @@ const createTaskTemplate = (task) => {
 };
 
 
-export default class TaskView {
+export default class TaskView extends Abstract {
   constructor(task) {
-    this._element = null;
+    super();
     this._task = task;
   }
-
   getTemplate() {
     return createTaskTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,5 +1,6 @@
-import {isExpired, isRepeating, createElement} from '../utils.js';
+import {isExpired, isRepeating} from '../utils.js';
 import {COLORS} from '../constants.js';
+import Abstract from './abstract.js';
 
 const createTaskEditDateTemplate = (dueDate) => {
   return `<button class="card__date-deadline-toggle" type="button">
@@ -134,23 +135,12 @@ const createTaskEditTemplate = (task = {}) => {
   );
 };
 
-export default class TaskEditView {
+export default class TaskEditView extends Abstract {
   constructor(task) {
-    this._element = null;
+    super();
     this._task = task;
   }
-
   getTemplate() {
     return createTaskEditTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }
