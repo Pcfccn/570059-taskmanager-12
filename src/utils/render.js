@@ -12,7 +12,7 @@ const render = (container, element, place = renderPosition.BEFORE_END) => {
 
   switch (place) {
     case renderPosition.AFTER_BEGIN:
-      container.prepand(element);
+      container.prepend(element);
       break;
     case renderPosition.BEFORE_END:
       container.append(element);
