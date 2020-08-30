@@ -7,7 +7,8 @@ import TaskView from "../view/task.js";
 import TaskEditView from "../view/task-edit.js";
 import LoadMoreButtonView from "../view/load-more-button.js";
 import {render, replace, remove} from "../utils/render.js";
-import {TASK_COUNT_PER_STEP, renderPosition} from "../constants.js";
+import {TASK_COUNT_PER_STEP, renderPosition, sortTypes} from "../constants.js";
+import {sortTaskUp, sortTaskDown} from "../utils/task.js";
 
 export default class BoardPresenter {
   constructor(boardContainer) {
@@ -19,19 +20,50 @@ export default class BoardPresenter {
     this._noTaskComponent = new NoTaskView();
     this._loadMoreButtonComponent = new LoadMoreButtonView();
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._currentSortType = sortTypes.DEFAULT;
   }
 
   init(boardTasks) {
     this._boardTasks = boardTasks.slice();
+    this._sourcedBoardTasks = boardTasks.slice();
+
     render(this._boardContainer, this._boardComponent);
     render(this._boardComponent, this._taskListComponent);
 
     this._renderBoard();
   }
 
+  _sortTasks(sortType) {
+    switch (sortType) {
+      case sortTypes.DATE_UP:
+        this._boardTasks.sort(sortTaskUp);
+        break;
+      case sortTypes.DATE_DOWN:
+        this._boardTasks.sort(sortTaskDown);
+        break;
+      default:
+        this._boardTasks = this._sourcedBoardTasks.slice();
+    }
+
+    this._currentSortType = sortType;
+    this._clearTaskList();
+    this._renderTaskList();
+  }
+
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortTasks(sortType);
+  }
+
   _renderSort() {
     render(this._boardComponent, this._sortComponent, renderPosition.AFTER_BEGIN);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
+
 
   _renderTask(task) {
     const taskComponent = new TaskView(task);
@@ -87,6 +119,11 @@ export default class BoardPresenter {
   _renderLoadMoreButton() {
     render(this._boardComponent, this._loadMoreButtonComponent);
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreButtonClick);
+  }
+
+  _clearTaskList() {
+    this._taskListComponent.getElement().innerHTML = ``;
+    this._renderedTaskCount = TASK_COUNT_PER_STEP;
   }
 
   _renderTaskList() {
