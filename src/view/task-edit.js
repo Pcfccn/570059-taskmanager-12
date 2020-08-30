@@ -1,5 +1,6 @@
-import {isExpired, isRepeating, createElement} from '../utils.js';
+import {isTaskExpired, isTaskRepeating} from '../utils/task.js';
 import {COLORS} from '../constants.js';
+import Abstract from './abstract.js';
 
 const createTaskEditDateTemplate = (dueDate) => {
   return `<button class="card__date-deadline-toggle" type="button">
@@ -23,9 +24,9 @@ const createTaskEditDateTemplate = (dueDate) => {
 
 const createTaskEditRepeatingTemplate = (repeating) => {
   return `<button class="card__repeat-toggle" type="button">
-    repeat:<span class="card__repeat-status">${isRepeating(repeating) ? `yes` : `no`}</span>
+    repeat:<span class="card__repeat-status">${isTaskRepeating(repeating) ? `yes` : `no`}</span>
   </button>
-  ${isRepeating(repeating) ? `<fieldset class="card__repeat-days">
+  ${isTaskRepeating(repeating) ? `<fieldset class="card__repeat-days">
     <div class="card__repeat-days-inner">
       ${Object.entries(repeating).map(([day, repeat]) => `<input
         class="visually-hidden card__repeat-day-input"
@@ -75,12 +76,12 @@ const createTaskEditTemplate = (task = {}) => {
     }
   } = task;
 
-  const deadlineClassName = isExpired(dueDate)
+  const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
     : ``;
   const dateTemplate = createTaskEditDateTemplate(dueDate);
 
-  const repeatingClassName = isRepeating(repeating)
+  const repeatingClassName = isTaskRepeating(repeating)
     ? `card--repeat`
     : ``;
 
@@ -134,23 +135,23 @@ const createTaskEditTemplate = (task = {}) => {
   );
 };
 
-export default class TaskEditView {
+export default class TaskEditView extends Abstract {
   constructor(task) {
-    this._element = null;
+    super();
     this._task = task;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
-
   getTemplate() {
     return createTaskEditTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
-  removeElement() {
-    this._element = null;
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 }
