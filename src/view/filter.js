@@ -23,9 +23,11 @@ export const createFilterTemplate = (filterItems) => {
     .map((filter, index) => createFilterItemTemplate(filter, index === 0))
     .join(``);
 
-  return `<section class="main__filter filter container">
-    ${filterItemsTemplate}
-  </section>`;
+  return (
+    `<section class="main__filter filter container">
+      ${filterItemsTemplate}
+    </section>`
+  );
 };
 
 export default class FilterView extends Abstract {
