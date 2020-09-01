@@ -3,13 +3,16 @@ import TaskEditView from "../view/task-edit";
 import {replace, render, remove} from "../utils/render";
 
 export default class TaskPresenter {
-  constructor(taskListContainer) {
+  constructor(taskListContainer, changeData) {
 
     this._taskListContainer = taskListContainer;
+    this._changeData = changeData;
     this._taskComponent = null;
     this._taskEditComponent = null;
 
     this._editClickHandler = this._editClickHandler.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleArchiveClick = this._handleArchiveClick.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
@@ -24,6 +27,8 @@ export default class TaskPresenter {
     this._taskEditComponent = new TaskEditView(task);
 
     this._taskComponent.setEditClickHandler(this._editClickHandler);
+    this._taskComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._taskComponent.setArchiveClickHandler(this._handleArchiveClick);
     this._taskEditComponent.setFormSubmitHandler(this._formSubmitHandler);
 
     if (prevTaskComponent === null || prevTaskEditComponent === null) {
@@ -71,7 +76,32 @@ export default class TaskPresenter {
     this._replaceCardToForm();
   }
 
-  _formSubmitHandler() {
+  _formSubmitHandler(task) {
+    this._changeData(task);
     this._replaceFormToCard();
+  }
+
+  _handleFavoriteClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._task,
+            {
+              isFavorite: !this._task.isFavorite
+            }
+        )
+    );
+  }
+
+  _handleArchiveClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._task,
+            {
+              isArchive: !this._task.isArchive
+            }
+        )
+    );
   }
 }
