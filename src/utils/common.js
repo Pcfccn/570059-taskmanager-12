@@ -9,4 +9,18 @@ const getRandomArrayElement = (array) => {
   return array[getRandomInteger(0, array.length - 1)];
 };
 
-export {getRandomInteger, getRandomArrayElement};
+const updateItem = (itemsArray, updatedItem) => {
+  const index = itemsArray.findIndex((item) => item.id === updatedItem.id);
+
+  if (index === -1) {
+    return itemsArray;
+  }
+
+  return [
+    ...itemsArray.slice(0, index),
+    updatedItem,
+    ...itemsArray.slice(index + 1)
+  ];
+};
+
+export {getRandomInteger, getRandomArrayElement, updateItem};
