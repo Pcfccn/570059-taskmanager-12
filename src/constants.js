@@ -16,4 +16,21 @@ const sortTypes = {
   DATE_UP: `date-up`
 };
 
-export {COLORS, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap, renderPosition, sortTypes};
+const BLANK_TASK = {
+  color: COLORS[0],
+  description: ``,
+  dueDate: null,
+  repeating: {
+    mo: false,
+    tu: false,
+    we: false,
+    th: false,
+    fr: false,
+    sa: false,
+    su: false
+  },
+  isArchive: false,
+  isFavorite: false
+};
+
+export {COLORS, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap, renderPosition, sortTypes, BLANK_TASK};
