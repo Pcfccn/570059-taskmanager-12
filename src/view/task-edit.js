@@ -158,6 +158,11 @@ export default class TaskEditView extends Smart {
     this._setInnerHandlers();
   }
 
+  reset(task) {
+    this.updateData(
+        TaskEditView.parseTaskToData(task)
+    );
+  }
 
   getTemplate() {
     return createTaskEditTemplate(this._data);
