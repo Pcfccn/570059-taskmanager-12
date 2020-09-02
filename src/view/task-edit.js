@@ -148,13 +148,7 @@ export default class TaskEditView extends Abstract {
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._dueDateToggleHandler = this._dueDateToggleHandler.bind(this);
     this._repeatingToggleHandler = this._repeatingToggleHandler.bind(this);
-
-    this.getElement()
-      .querySelector(`.card__date-deadline-toggle`)
-      .addEventListener(`click`, this._dueDateToggleHandler);
-    this.getElement()
-      .querySelector(`.card__repeat-toggle`)
-      .addEventListener(`click`, this._repeatingToggleHandler);
+    this._setInnerHandlers();
   }
 
 
@@ -185,6 +179,22 @@ export default class TaskEditView extends Abstract {
 
     parent.replaceChild(newElement, prevElement);
     prevElement = null;
+
+    this.restoreHandlers();
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement()
+      .querySelector(`.card__date-deadline-toggle`)
+      .addEventListener(`click`, this._dueDateToggleHandler);
+    this.getElement()
+      .querySelector(`.card__repeat-toggle`)
+      .addEventListener(`click`, this._repeatingToggleHandler);
   }
 
   _dueDateToggleHandler(evt) {
