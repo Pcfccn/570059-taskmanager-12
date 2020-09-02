@@ -24,6 +24,7 @@ export default class BoardPresenter {
     this._currentSortType = sortTypes.DEFAULT;
     this._taskPresenter = {};
     this._handleTaskChange = this._handleTaskChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(boardTasks) {
@@ -34,6 +35,12 @@ export default class BoardPresenter {
     render(this._boardComponent, this._taskListComponent);
 
     this._renderBoard();
+  }
+
+  _handleModeChange() {
+    Object
+      .values(this._taskPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _sortTasks(sortType) {
@@ -68,7 +75,7 @@ export default class BoardPresenter {
 
 
   _renderTask(task) {
-    const taskPresenter = new TaskPresenter(this._taskListComponent, this._handleTaskChange);
+    const taskPresenter = new TaskPresenter(this._taskListComponent, this._handleTaskChange, this._handleModeChange);
     taskPresenter.init(task);
     this._taskPresenter[task.id] = taskPresenter;
   }

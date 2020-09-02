@@ -33,4 +33,9 @@ const BLANK_TASK = {
   isFavorite: false
 };
 
-export {COLORS, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap, renderPosition, sortTypes, BLANK_TASK};
+const mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};
+
+export {COLORS, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap, renderPosition, sortTypes, BLANK_TASK, mode};

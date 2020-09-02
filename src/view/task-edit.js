@@ -1,4 +1,4 @@
-import {isTaskExpired, isTaskRepeating} from '../utils/task.js';
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from '../utils/task.js';
 import {COLORS, BLANK_TASK} from '../constants.js';
 import Smart from './smart.js';
 
@@ -16,7 +16,7 @@ const createTaskEditDateTemplate = (dueDate, isDueDate) => {
               type="text"
               placeholder=""
               name="date"
-              value="${dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`})}"
+              value="${humanizeTaskDueDate(dueDate)}"
             />
           </label>
         </fieldset>`
