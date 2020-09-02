@@ -1,6 +1,6 @@
 import {isTaskExpired, isTaskRepeating} from '../utils/task.js';
 import {COLORS, BLANK_TASK} from '../constants.js';
-import Abstract from './abstract.js';
+import Smart from './smart.js';
 
 
 const createTaskEditDateTemplate = (dueDate, isDueDate) => {
@@ -143,7 +143,7 @@ const createTaskEditTemplate = (data = {}) => {
   );
 };
 
-export default class TaskEditView extends Abstract {
+export default class TaskEditView extends Smart {
   constructor(task = BLANK_TASK) {
     super();
     this._data = TaskEditView.parseTaskToData(task);
@@ -161,37 +161,6 @@ export default class TaskEditView extends Abstract {
 
   getTemplate() {
     return createTaskEditTemplate(this._data);
-  }
-
-  updateData(update, justDataUpdating) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-        {},
-        this._data,
-        update
-    );
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-    prevElement = null;
-
-    this.restoreHandlers();
   }
 
   restoreHandlers() {
