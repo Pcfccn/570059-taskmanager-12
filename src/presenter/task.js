@@ -1,7 +1,7 @@
 import TaskView from "../view/task";
 import TaskEditView from "../view/task-edit";
 import {replace, render, remove} from "../utils/render";
-import {mode} from "../constants";
+import {mode, keyboardKey} from "../constants";
 
 export default class TaskPresenter {
   constructor(taskListContainer, changeData, changeMode) {
@@ -14,8 +14,8 @@ export default class TaskPresenter {
     this._mode = mode.DEFAULT;
 
     this._editClickHandler = this._editClickHandler.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._handleArchiveClick = this._handleArchiveClick.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._archiveClickHandler = this._archiveClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
@@ -30,8 +30,8 @@ export default class TaskPresenter {
     this._taskEditComponent = new TaskEditView(task);
 
     this._taskComponent.setEditClickHandler(this._editClickHandler);
-    this._taskComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._taskComponent.setArchiveClickHandler(this._handleArchiveClick);
+    this._taskComponent.setFavoriteClickHandler(this._favoriteClickHandler);
+    this._taskComponent.setArchiveClickHandler(this._archiveClickHandler);
     this._taskEditComponent.setFormSubmitHandler(this._formSubmitHandler);
 
     if (prevTaskComponent === null || prevTaskEditComponent === null) {
@@ -77,7 +77,7 @@ export default class TaskPresenter {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.key === keyboardKey.ESCAPE || evt.key === keyboardKey.ESC) {
       evt.preventDefault();
       this._taskEditComponent.reset(this._task);
       this._replaceFormToCard();
@@ -94,27 +94,11 @@ export default class TaskPresenter {
     this._replaceFormToCard();
   }
 
-  _handleFavoriteClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._task,
-            {
-              isFavorite: !this._task.isFavorite
-            }
-        )
-    );
+  _favoriteClickHandler() {
+    this._changeData(Object.assign({}, this._task, {isFavorite: !this._task.isFavorite}));
   }
 
-  _handleArchiveClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._task,
-            {
-              isArchive: !this._task.isArchive
-            }
-        )
-    );
+  _archiveClickHandler() {
+    this._changeData(Object.assign({}, this._task, {isArchive: !this._task.isArchive}));
   }
 }

@@ -1,5 +1,5 @@
 import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from '../utils/task.js';
-import {COLORS, BLANK_TASK} from '../constants.js';
+import {BLANK_TASK, listOfColors} from '../constants.js';
 import Smart from './smart.js';
 
 
@@ -48,7 +48,7 @@ const createTaskEditRepeatingTemplate = (repeating, isRepeating) => {
 };
 
 const createTaskEditColorsTemplate = (currentColor) => {
-  return COLORS.map((color) => `<input
+  return Object.values(listOfColors).map((color) => `<input
     type="radio"
     id="color-${color}"
     class="card__color-input card__color-input--${color} visually-hidden"
@@ -66,7 +66,7 @@ const createTaskEditColorsTemplate = (currentColor) => {
 const createTaskEditTemplate = (data = {}) => {
 
   const {
-    color = `black`,
+    color = listOfColors.BLACK_DEFAULT,
     description = ``,
     dueDate = null,
     repeating = {
@@ -173,6 +173,11 @@ export default class TaskEditView extends Smart {
     this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
   _setInnerHandlers() {
     this.getElement()
       .querySelector(`.card__date-deadline-toggle`)
@@ -240,11 +245,6 @@ export default class TaskEditView extends Smart {
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(TaskEditView.parseDataToTask(this._data));
-  }
-
-  setFormSubmitHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
   static parseTaskToData(task) {

@@ -1,5 +1,5 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils/common.js';
-import {COLORS, DESCRIPTIONS, maxDaysGap} from '../constants.js';
+import {DESCRIPTIONS, maxDaysGap, listOfColors} from '../constants.js';
 
 const generateDate = () => {
 
@@ -40,7 +40,7 @@ const generateTask = () => {
     description: getRandomArrayElement(DESCRIPTIONS),
     dueDate,
     repeating,
-    color: getRandomArrayElement(COLORS),
+    color: getRandomArrayElement(Object.values(listOfColors)),
     isArchive: Boolean(getRandomInteger(0, 1)),
     isFavorite: Boolean(getRandomInteger(0, 1)),
   };

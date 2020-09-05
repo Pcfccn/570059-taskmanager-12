@@ -1,4 +1,11 @@
-const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
+const listOfColors = {
+  BLACK_DEFAULT: `black`,
+  YELLOW: `yellow`,
+  BLUE: `blue`,
+  GREEN: `green`,
+  PINK: `pink`,
+};
+
 const DESCRIPTIONS = [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`];
 
 const TASK_COUNT = 22;
@@ -17,7 +24,7 @@ const sortTypes = {
 };
 
 const BLANK_TASK = {
-  color: COLORS[0],
+  color: listOfColors.BLACK_DEFAULT,
   description: ``,
   dueDate: null,
   repeating: {
@@ -38,4 +45,9 @@ const mode = {
   EDITING: `EDITING`
 };
 
-export {COLORS, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap, renderPosition, sortTypes, BLANK_TASK, mode};
+const keyboardKey = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`,
+};
+
+export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap, renderPosition, sortTypes, BLANK_TASK, mode, keyboardKey};
