@@ -23,6 +23,16 @@ const sortTypes = {
   DATE_UP: `date-up`
 };
 
+const noRepitingDays = {
+  mo: false,
+  tu: false,
+  we: false,
+  th: false,
+  fr: false,
+  sa: false,
+  su: false
+};
+
 const BLANK_TASK = {
   color: listOfColors.BLACK_DEFAULT,
   description: ``,
@@ -40,16 +50,6 @@ const mode = {
 const keyboardKey = {
   ESCAPE: `Escape`,
   ESC: `Esc`,
-};
-
-const noRepitingDays = {
-  mo: false,
-  tu: false,
-  we: false,
-  th: false,
-  fr: false,
-  sa: false,
-  su: false
 };
 
 export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap,
