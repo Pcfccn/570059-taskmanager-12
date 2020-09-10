@@ -1,4 +1,11 @@
-const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
+const listOfColors = {
+  BLACK_DEFAULT: `black`,
+  YELLOW: `yellow`,
+  BLUE: `blue`,
+  GREEN: `green`,
+  PINK: `pink`,
+};
+
 const DESCRIPTIONS = [`Изучить теорию`, `Сделать домашку`, `Пройти интенсив на соточку`];
 
 const TASK_COUNT = 22;
@@ -16,4 +23,34 @@ const sortTypes = {
   DATE_UP: `date-up`
 };
 
-export {COLORS, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap, renderPosition, sortTypes};
+const noRepitingDays = {
+  mo: false,
+  tu: false,
+  we: false,
+  th: false,
+  fr: false,
+  sa: false,
+  su: false
+};
+
+const BLANK_TASK = {
+  color: listOfColors.BLACK_DEFAULT,
+  description: ``,
+  dueDate: null,
+  repeating: noRepitingDays,
+  isArchive: false,
+  isFavorite: false
+};
+
+const mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};
+
+const keyboardKey = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`,
+};
+
+export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap,
+  renderPosition, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays};
