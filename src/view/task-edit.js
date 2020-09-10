@@ -1,5 +1,5 @@
 import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from '../utils/task.js';
-import {BLANK_TASK, listOfColors} from '../constants.js';
+import {BLANK_TASK, listOfColors, noRepitingDays} from '../constants.js';
 import Smart from './smart.js';
 
 
@@ -69,15 +69,7 @@ const createTaskEditTemplate = (data = {}) => {
     color = listOfColors.BLACK_DEFAULT,
     description = ``,
     dueDate = null,
-    repeating = {
-      mo: false,
-      tu: false,
-      we: false,
-      th: false,
-      fr: false,
-      sa: false,
-      su: false
-    },
+    repeating = noRepitingDays,
     isDueDate,
     isRepeating
   } = data;
@@ -266,15 +258,7 @@ export default class TaskEditView extends Smart {
     }
 
     if (!data.isRepeating) {
-      data.repeating = {
-        mo: false,
-        tu: false,
-        we: false,
-        th: false,
-        fr: false,
-        sa: false,
-        su: false
-      };
+      data.repeating = noRepitingDays;
     }
 
     delete data.isDueDate;

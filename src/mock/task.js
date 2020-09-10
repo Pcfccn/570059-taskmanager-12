@@ -1,5 +1,5 @@
 import {getRandomInteger, getRandomArrayElement} from '../utils/common.js';
-import {DESCRIPTIONS, maxDaysGap, listOfColors} from '../constants.js';
+import {DESCRIPTIONS, maxDaysGap, listOfColors, noRepitingDays} from '../constants.js';
 
 const generateDate = () => {
 
@@ -15,15 +15,7 @@ const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 const generateDueDate = () => getRandomInteger(0, 1) ? generateDate() : null;
 
 const generateRepeating = (dueDate) => {
-  const week = {
-    mo: false,
-    tu: false,
-    we: false,
-    th: false,
-    fr: false,
-    sa: false,
-    su: false,
-  };
+  const week = noRepitingDays;
 
   if (!dueDate) {
     week.we = Boolean(getRandomInteger(0, 1));

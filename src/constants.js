@@ -27,15 +27,7 @@ const BLANK_TASK = {
   color: listOfColors.BLACK_DEFAULT,
   description: ``,
   dueDate: null,
-  repeating: {
-    mo: false,
-    tu: false,
-    we: false,
-    th: false,
-    fr: false,
-    sa: false,
-    su: false
-  },
+  repeating: noRepitingDays,
   isArchive: false,
   isFavorite: false
 };
@@ -50,4 +42,15 @@ const keyboardKey = {
   ESC: `Esc`,
 };
 
-export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap, renderPosition, sortTypes, BLANK_TASK, mode, keyboardKey};
+const noRepitingDays = {
+  mo: false,
+  tu: false,
+  we: false,
+  th: false,
+  fr: false,
+  sa: false,
+  su: false
+};
+
+export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap,
+  renderPosition, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays};
