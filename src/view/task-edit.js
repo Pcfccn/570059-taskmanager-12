@@ -89,10 +89,10 @@ const createTaskEditTemplate = (data = {}) => {
 
   const colorsTemplate = createTaskEditColorsTemplate(color);
 
-  const isSubmitDisabled = isRepeating && !isTaskRepeating(repeating);
+  const isSubmitDisabled = (isDueDate && dueDate === null) || (isRepeating && !isTaskRepeating(repeating));
 
   return (
-    `<article class="card card--edit card--${color} ${deadlineClassName} ${repeatingClassName}">
+    `<article class="card card--edit card--${color} ${repeatingClassName}">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__color-bar">
@@ -141,8 +141,10 @@ export default class TaskEditView extends Smart {
   constructor(task = BLANK_TASK) {
     super();
     this._data = TaskEditView.parseTaskToData(task);
+    this._datepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._dueDateChangeHandler = this._dueDateChangeHandler.bind(this);
     this._dueDateToggleHandler = this._dueDateToggleHandler.bind(this);
     this._repeatingToggleHandler = this._repeatingToggleHandler.bind(this);
     this._descriptionInputHandler = this._descriptionInputHandler.bind(this);
@@ -150,6 +152,7 @@ export default class TaskEditView extends Smart {
     this._colorChangeHandler = this._colorChangeHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   reset(task) {
@@ -165,11 +168,38 @@ export default class TaskEditView extends Smart {
   restoreHandlers() {
     this._setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
+    this._setDatepicker();
   }
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  _dueDateChangeHandler([userDate]) {
+    userDate.setHours(23, 59, 59, 999);
+
+    this.updateData({
+      dueDate: userDate
+    });
+  }
+
+  _setDatepicker() {
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+
+    if (this._data.isDueDate) {
+      this._datepicker = flatpickr(
+          this.getElement().querySelector(`.card__date`),
+          {
+            dateFormat: `j F`,
+            defaultDate: this._data.dueDate,
+            onChange: this._dueDateChangeHandler
+          }
+      );
+    }
   }
 
   _setInnerHandlers() {
