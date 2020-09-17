@@ -1,4 +1,4 @@
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from '../utils/task.js';
+import {isTaskRepeating, humanizeTaskDueDate} from '../utils/task.js';
 import {BLANK_TASK, listOfColors, noRepitingDays} from '../constants.js';
 import Smart from './smart.js';
 import flatpickr from "flatpickr";
