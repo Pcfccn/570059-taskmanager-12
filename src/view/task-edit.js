@@ -76,9 +76,6 @@ const createTaskEditTemplate = (data = {}) => {
     isRepeating
   } = data;
 
-  const deadlineClassName = isTaskExpired(dueDate)
-    ? `card--deadline`
-    : ``;
   const dateTemplate = createTaskEditDateTemplate(dueDate, isDueDate);
 
   const repeatingClassName = isRepeating
