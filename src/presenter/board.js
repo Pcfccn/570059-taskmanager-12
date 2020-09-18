@@ -11,8 +11,9 @@ import TaskPresenter from "./task.js";
 import {updateItem} from "../utils/common.js";
 
 export default class BoardPresenter {
-  constructor(boardContainer) {
+  constructor(boardContainer, tasksModel) {
     this._boardContainer = boardContainer;
+    this._tasksModel = tasksModel;
     this._currentSortType = sortTypes.DEFAULT;
     this._renderedTaskCount = TASK_COUNT_PER_STEP;
     this._taskPresenter = {};
@@ -37,6 +38,10 @@ export default class BoardPresenter {
     render(this._boardComponent, this._taskListComponent);
 
     this._renderBoard();
+  }
+
+  _getTasks() {
+    return this._tasksModel.getTasks();
   }
 
   _modeChangeHandler() {
