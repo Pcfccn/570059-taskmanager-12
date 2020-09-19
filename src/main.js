@@ -19,7 +19,7 @@ const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 render(siteHeaderElement, new SiteMenuView());
-const boardPresenter = new BoardPresenter(siteMainElement, tasksModel);
+const boardPresenter = new BoardPresenter(siteMainElement, tasksModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, tasksModel);
 
 filterPresenter.init();
