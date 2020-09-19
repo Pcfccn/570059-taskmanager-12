@@ -12,7 +12,7 @@ const TASK_COUNT = 22;
 const TASK_COUNT_PER_STEP = 8;
 const maxDaysGap = 7;
 
-const renderPosition = {
+const renderPositions = {
   AFTER_BEGIN: `afterBegin`,
   BEFORE_END: `beforeEnd`,
 };
@@ -65,4 +65,4 @@ const updateTypes = {
 };
 
 export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap,
-  renderPosition, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays, userActions, updateTypes};
+  renderPositions, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays, userActions, updateTypes};
