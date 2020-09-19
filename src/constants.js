@@ -68,5 +68,14 @@ const targetTags = {
   link: `A`
 };
 
+const filterTypes = {
+  ALL: `all`,
+  OVERDUE: `overdue`,
+  TODAY: `today`,
+  FAVORITES: `favorites`,
+  REPEATING: `repeating`,
+  ARCHIVE: `archive`
+};
+
 export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap,
-  renderPositions, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays, userActions, updateTypes, targetTags};
+  renderPositions, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays, userActions, updateTypes, targetTags, filterTypes};
