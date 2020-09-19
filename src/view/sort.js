@@ -1,5 +1,5 @@
 import Abstract from "./abstract";
-import {sortTypes} from "../constants";
+import {sortTypes, targetTags} from "../constants";
 
 const createSortTemplate = (currentSortType) => {
   return (
@@ -23,7 +23,7 @@ export default class SortView extends Abstract {
   }
 
   _sortTypeChangeHandler(evt) {
-    if (evt.target.tagName !== `A`) {
+    if (evt.target.tagName !== targetTags.link) {
       return;
     }
 

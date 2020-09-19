@@ -64,5 +64,9 @@ const updateTypes = {
   MAJOR: `MAJOR`
 };
 
+const targetTags = {
+  link: `A`
+};
+
 export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap,
-  renderPositions, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays, userActions, updateTypes};
+  renderPositions, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays, userActions, updateTypes, targetTags};
