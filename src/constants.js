@@ -52,5 +52,17 @@ const keyboardKey = {
   ESC: `Esc`,
 };
 
+const userActions = {
+  UPDATE_TASK: `UPDATE_TASK`,
+  ADD_TASK: `ADD_TASK`,
+  DELETE_TASK: `DELETE_TASK`
+};
+
+const updateTypes = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
 export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap,
-  renderPosition, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays};
+  renderPosition, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays, userActions, updateTypes};

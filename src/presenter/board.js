@@ -8,7 +8,6 @@ import {render, remove} from "../utils/render.js";
 import {TASK_COUNT_PER_STEP, renderPosition, sortTypes} from "../constants.js";
 import {sortTaskUp, sortTaskDown} from "../utils/task.js";
 import TaskPresenter from "./task.js";
-import {updateItem} from "../utils/common.js";
 
 export default class BoardPresenter {
   constructor(boardContainer, tasksModel) {
@@ -25,9 +24,12 @@ export default class BoardPresenter {
     this._taskListComponent = new TaskListView();
 
     this._loadMoreButtonClickHandler = this._loadMoreButtonClickHandler.bind(this);
-    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
-    this._taskChangeHandler = this._taskChangeHandler.bind(this);
     this._modeChangeHandler = this._modeChangeHandler.bind(this);
+    this._modelEventHandler = this._modelEventHandler.bind(this);
+    this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
+    this._viewActionHandler = this._viewActionHandler.bind(this);
+
+    this._tasksModel.addObserver(this._modelEventHandler);
   }
 
   init() {
@@ -71,7 +73,7 @@ export default class BoardPresenter {
 
 
   _renderTask(task) {
-    const taskPresenter = new TaskPresenter(this._taskListComponent, this._taskChangeHandler, this._modeChangeHandler);
+    const taskPresenter = new TaskPresenter(this._taskListComponent, this._viewActionHandler, this._modeChangeHandler);
     taskPresenter.init(task);
     this._taskPresenter[task.id] = taskPresenter;
   }
@@ -130,9 +132,25 @@ export default class BoardPresenter {
     this._renderTaskList();
   }
 
-  _taskChangeHandler(updatedTask) {
-    this._boardTasks = updateItem(this._boardTasks, updatedTask);
-    this._sourcedBoardTasks = updateItem(this._sourcedBoardTasks, updatedTask);
-    this._taskPresenter[updatedTask.id].init(updatedTask);
+  // _taskChangeHandler(updatedTask) {
+  //   this._boardTasks = updateItem(this._boardTasks, updatedTask);
+  //   this._sourcedBoardTasks = updateItem(this._sourcedBoardTasks, updatedTask);
+  //   this._taskPresenter[updatedTask.id].init(updatedTask);
+  // }
+
+  _viewActionHandler(actionType, updateType, update) {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  }
+
+  _modelEventHandler(updateType, data) {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   }
 }

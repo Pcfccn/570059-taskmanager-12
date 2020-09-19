@@ -1,7 +1,7 @@
 import TaskView from "../view/task";
 import TaskEditView from "../view/task-edit";
 import {replace, render, remove} from "../utils/render";
-import {mode, keyboardKey} from "../constants";
+import {mode, keyboardKey, userActions, updateTypes} from "../constants";
 
 export default class TaskPresenter {
   constructor(taskListContainer, changeData, changeMode) {
@@ -90,15 +90,25 @@ export default class TaskPresenter {
   }
 
   _formSubmitHandler(task) {
-    this._changeData(task);
+    this._changeData(
+        userActions.UPDATE_TASK,
+        updateTypes.MINOR,
+        task
+    );
     this._replaceFormToCard();
   }
 
   _favoriteClickHandler() {
-    this._changeData(Object.assign({}, this._task, {isFavorite: !this._task.isFavorite}));
+    this._changeData(
+        userActions.UPDATE_TASK,
+        updateTypes.MINOR,
+        Object.assign({}, this._task, {isFavorite: !this._task.isFavorite}));
   }
 
   _archiveClickHandler() {
-    this._changeData(Object.assign({}, this._task, {isArchive: !this._task.isArchive}));
+    this._changeData(
+        userActions.UPDATE_TASK,
+        updateTypes.MINOR,
+        Object.assign({}, this._task, {isArchive: !this._task.isArchive}));
   }
 }
