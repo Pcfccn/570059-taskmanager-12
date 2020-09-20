@@ -5,10 +5,11 @@ import TaskListView from "../view/task-list.js";
 import NoTaskView from "../view/no-task.js";
 import LoadMoreButtonView from "../view/load-more-button.js";
 import {render, remove} from "../utils/render.js";
-import {TASK_COUNT_PER_STEP, renderPositions, sortTypes, userActions, updateTypes} from "../constants.js";
+import {TASK_COUNT_PER_STEP, renderPositions, sortTypes, userActions, updateTypes, filterTypes} from "../constants.js";
 import {sortTaskUp, sortTaskDown} from "../utils/task.js";
 import TaskPresenter from "./task.js";
 import {filter} from "../utils/filter.js";
+import TaskNewPresenter from "./task-new.js";
 
 export default class BoardPresenter {
   constructor(boardContainer, tasksModel, filterModel) {
@@ -26,6 +27,7 @@ export default class BoardPresenter {
     this._boardComponent = new BoardView();
     this._noTaskComponent = new NoTaskView();
     this._taskListComponent = new TaskListView();
+    this._taskNewPresenter = new TaskNewPresenter(this._taskListComponent, this._viewActionHandler);
 
     this._loadMoreButtonClickHandler = this._loadMoreButtonClickHandler.bind(this);
     this._modeChangeHandler = this._modeChangeHandler.bind(this);
@@ -44,8 +46,17 @@ export default class BoardPresenter {
     this._renderBoard();
   }
 
+  createTask() {
+    this._currentSortType = sortTypes.DEFAULT;
+    this._filterModel.setFilter(updateTypes.MAJOR, filterTypes.ALL);
+    this._taskNewPresenter.init();
+    console.log(this._tasksModel);
+  }
+
   _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
     const taskCount = this._getTasks().length;
+
+    this._taskNewPresenter.destroy();
 
     Object.values(this._taskPresenter).forEach((presenter) => presenter.destroy());
     this._taskPresenter = {};
@@ -81,6 +92,7 @@ export default class BoardPresenter {
   }
 
   _modeChangeHandler() {
+    this._taskNewPresenter.destroy();
     Object
       .values(this._taskPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -178,6 +190,7 @@ export default class BoardPresenter {
   }
 
   _viewActionHandler(actionType, updateType, update) {
+    console.log(this._tasksModel);
     switch (actionType) {
       case userActions.UPDATE_TASK:
         this._tasksModel.updateTask(updateType, update);
