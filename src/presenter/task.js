@@ -1,7 +1,8 @@
 import TaskView from "../view/task";
 import TaskEditView from "../view/task-edit";
 import {replace, render, remove} from "../utils/render";
-import {mode, keyboardKey} from "../constants";
+import {mode, keyboardKey, userActions, updateTypes} from "../constants";
+import {isDatesEqual, isTaskRepeating} from "../utils/task";
 
 export default class TaskPresenter {
   constructor(taskListContainer, changeData, changeMode) {
@@ -14,6 +15,7 @@ export default class TaskPresenter {
     this._mode = mode.DEFAULT;
 
     this._editClickHandler = this._editClickHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._archiveClickHandler = this._archiveClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -33,6 +35,7 @@ export default class TaskPresenter {
     this._taskComponent.setFavoriteClickHandler(this._favoriteClickHandler);
     this._taskComponent.setArchiveClickHandler(this._archiveClickHandler);
     this._taskEditComponent.setFormSubmitHandler(this._formSubmitHandler);
+    this._taskEditComponent.setDeleteClickHandler(this._deleteClickHandler);
 
     if (prevTaskComponent === null || prevTaskEditComponent === null) {
       render(this._taskListContainer, this._taskComponent);
@@ -89,16 +92,38 @@ export default class TaskPresenter {
     this._replaceCardToForm();
   }
 
-  _formSubmitHandler(task) {
-    this._changeData(task);
+  _formSubmitHandler(update) {
+    const isMinorUpdate =
+      !isDatesEqual(this._task.dueDate, update.dueDate) ||
+      isTaskRepeating(this._task.repeating) !== isTaskRepeating(update.repeating);
+
+    this._changeData(
+        userActions.UPDATE_TASK,
+        isMinorUpdate ? updateTypes.MINOR : updateTypes.PATCH,
+        update
+    );
     this._replaceFormToCard();
   }
 
+  _deleteClickHandler(task) {
+    this._changeData(
+        userActions.DELETE_TASK,
+        updateTypes.MINOR,
+        task
+    );
+  }
+
   _favoriteClickHandler() {
-    this._changeData(Object.assign({}, this._task, {isFavorite: !this._task.isFavorite}));
+    this._changeData(
+        userActions.UPDATE_TASK,
+        updateTypes.MINOR,
+        Object.assign({}, this._task, {isFavorite: !this._task.isFavorite}));
   }
 
   _archiveClickHandler() {
-    this._changeData(Object.assign({}, this._task, {isArchive: !this._task.isArchive}));
+    this._changeData(
+        userActions.UPDATE_TASK,
+        updateTypes.MINOR,
+        Object.assign({}, this._task, {isArchive: !this._task.isArchive}));
   }
 }

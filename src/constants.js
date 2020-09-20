@@ -12,7 +12,7 @@ const TASK_COUNT = 22;
 const TASK_COUNT_PER_STEP = 8;
 const maxDaysGap = 7;
 
-const renderPosition = {
+const renderPositions = {
   AFTER_BEGIN: `afterBegin`,
   BEFORE_END: `beforeEnd`,
 };
@@ -52,5 +52,30 @@ const keyboardKey = {
   ESC: `Esc`,
 };
 
+const userActions = {
+  UPDATE_TASK: `UPDATE_TASK`,
+  ADD_TASK: `ADD_TASK`,
+  DELETE_TASK: `DELETE_TASK`
+};
+
+const updateTypes = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
+const targetTags = {
+  link: `A`
+};
+
+const filterTypes = {
+  ALL: `all`,
+  OVERDUE: `overdue`,
+  TODAY: `today`,
+  FAVORITES: `favorites`,
+  REPEATING: `repeating`,
+  ARCHIVE: `archive`
+};
+
 export {listOfColors, DESCRIPTIONS, TASK_COUNT, TASK_COUNT_PER_STEP, maxDaysGap,
-  renderPosition, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays};
+  renderPositions, sortTypes, BLANK_TASK, mode, keyboardKey, noRepitingDays, userActions, updateTypes, targetTags, filterTypes};

@@ -2,6 +2,7 @@ import {isTaskRepeating, humanizeTaskDueDate} from '../utils/task.js';
 import {BLANK_TASK, listOfColors, noRepitingDays} from '../constants.js';
 import Smart from './smart.js';
 import flatpickr from "flatpickr";
+import he from "he";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -104,7 +105,7 @@ const createTaskEditTemplate = (data = {}) => {
               class="card__text"
               placeholder="Start typing your text here..."
               name="text"
-            >${description}</textarea>
+            >${he.encode(description)}</textarea>
           </label>
         </div>
 
@@ -140,6 +141,7 @@ export default class TaskEditView extends Smart {
     this._data = TaskEditView.parseTaskToData(task);
     this._datepicker = null;
 
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._dueDateChangeHandler = this._dueDateChangeHandler.bind(this);
     this._dueDateToggleHandler = this._dueDateToggleHandler.bind(this);
@@ -150,6 +152,15 @@ export default class TaskEditView extends Smart {
 
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
   }
 
   reset(task) {
@@ -166,11 +177,17 @@ export default class TaskEditView extends Smart {
     this._setInnerHandlers();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this._setDatepicker();
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector(`.card__delete`).addEventListener(`click`, this._formDeleteClickHandler);
   }
 
   _dueDateChangeHandler([userDate]) {
@@ -179,6 +196,11 @@ export default class TaskEditView extends Smart {
     this.updateData({
       dueDate: userDate
     });
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(TaskEditView.parseDataToTask(this._data));
   }
 
   _setDatepicker() {

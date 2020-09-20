@@ -40,4 +40,4 @@ const generateTask = () => {
 
 const generateTasks = (count = 1) => new Array(count).fill().map(generateTask);
 
-export {generateTasks};
+export {generateTasks, generateId};
